@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.repeater.console.dal.mapper.RepeatMapper">
+
+    <resultMap id="BaseResultMap" type="com.alibaba.repeater.console.dal.model.Repeat">
+        <id column="id" property="id"/>
+        <result column="cost" property="cost"/>
+        <result column="finish" property="finish"/>
+        <result column="mock_invocations" property="mockInvocations"/>
+        <result column="origin_response_id" property="originResponseId"/>
+        <result column="repeat_id" property="repeatId"/>
+        <result column="response" property="response"/>
+        <result column="trace_id" property="traceId"/>
+    </resultMap>
+
+    <sql id="BaseColumn">
+        id, cost, finish, origin_response_id, repeat_id, trace_id
+    </sql>
+    <sql id="AllColumn">
+        id, cost, finish, origin_response_id, repeat_id, trace_id, response, mock_invocations
+    </sql>
+
+    <select id="selectByRepeatId" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumn"/>
+        FROM repeatModel rm
+        WHERE rm.repeat_id = #{repeatId}
+    </select>
+
+    <select id="selectAllColumnByRepeatId" resultMap="BaseResultMap">
+        SELECT <include refid="AllColumn"/>
+        FROM repeatModel rm
+        WHERE rm.repeat_id = #{repeatId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO `repeatModel` (`repeat_id`, `finish`, `response`, `origin_response_id`, `cost`, `trace_id`, `mock_invocations`)
+        VALUES (#{repeatId}, #{finish}, #{response}, #{originResponseId}, #{cost}, #{traceId}, #{mockInvocations})
+    </insert>
+
+    <update id="update">
+        UPDATE repeatModel
+        <set>
+            <if test="finish != null">
+                finish = #{finish}
+            </if>
+            <if test="responseId != null">
+                response_id = #{responseId}
+            </if>
+            <if test="cost != null">
+                cost = #{cost}
+            </if>
+            <if test="mockInvocations != null">
+                mock_invocations = #{mockInvocations}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

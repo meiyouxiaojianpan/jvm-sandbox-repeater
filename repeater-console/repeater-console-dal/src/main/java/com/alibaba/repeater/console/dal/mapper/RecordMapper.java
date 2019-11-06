@@ -24,8 +24,9 @@ public interface RecordMapper {
      * @param appName 应用名
      * @param traceId traceId
      */
-    @Select("select * from record where app_name = #{appName} and trace_id = #{traceId}")
+    @Select("select * from recordModel where app_name = #{appName} and trace_id = #{traceId}")
     @Results({
+            @Result(property = "id", column = "id"),
             @Result(property = "appName", column = "app_name"),
             @Result(property = "traceId", column = "trace_id"),
             @Result(property = "wrapperRecord", column = "wrapper_record"),
@@ -35,12 +36,23 @@ public interface RecordMapper {
     Record selectByAppNameAndTraceId(@Param("appName") String appName,
                                      @Param("traceId") String traceId);
 
+    @Select("select * from recordModel where id = #{id}")
+    @Results({
+        @Result(property = "id", column = "id"),
+        @Result(property = "appName", column = "app_name"),
+        @Result(property = "traceId", column = "trace_id"),
+        @Result(property = "wrapperRecord", column = "wrapper_record"),
+        @Result(property = "gmtRecord", column = "gmt_record"),
+        @Result(property = "gmtCreate", column = "gmt_create")
+    })
+    Record selectById(Long id);
+
     /**
      * 插入录制结果
      *
      * @param record 录制结果
      */
-    @Insert("insert into record(gmt_create,gmt_record,app_name,environment,host,trace_id,wrapper_record) " +
+    @Insert("insert into recordModel(gmt_create,gmt_record,app_name,environment,host,trace_id,wrapper_record) " +
             "VALUES (#{gmtCreate},#{gmtRecord},#{appName},#{environment},#{host},#{traceId},#{wrapperRecord})")
     void insert(Record record);
 
@@ -49,7 +61,7 @@ public interface RecordMapper {
      *
      * @param id
      */
-    @Delete("delete from record where id = #{id}")
+    @Delete("delete from recordModel where id = #{id}")
     void deleteById(@Param("id") Long id);
 
 
@@ -59,7 +71,7 @@ public interface RecordMapper {
      * @param appName 应用名
      * @param traceId traceId
      */
-    @Delete("delete from record where app_name = #{appName} and trace_id = #{traceId}")
+    @Delete("delete from recordModel where app_name = #{appName} and trace_id = #{traceId}")
     void deleteByAppNameAndTraceId(@Param("appName") String appName,
                                    @Param("traceId") String traceId);
 }
